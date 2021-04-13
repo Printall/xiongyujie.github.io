@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xiongyujie.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="加载内核exercise 4. 阅读有关C语言指针编程 *The C Programming Language 如果没有C语言基础的话，请不要跳过学习C语言指针问题。如果熟练掌握C语言，请跳过。  为了理解boot&#x2F;main.c文件，需要了解ELF二进制文件。 当你编译C语言和链接一个C语言程序的时候，编译器将源文件”.c”文件输出到目标文件到”.o”文件，目标文件包括硬件期望的二机制格式的汇编语">
+<meta property="og:type" content="article">
+<meta property="og:title" content="01_环境配置">
+<meta property="og:url" content="https://xiongyujie.github.io/2021/04/11/MIT6.828/03_lab1_2/index.html">
+<meta property="og:site_name" content="xiongyujie&#39;s blog">
+<meta property="og:description" content="加载内核exercise 4. 阅读有关C语言指针编程 *The C Programming Language 如果没有C语言基础的话，请不要跳过学习C语言指针问题。如果熟练掌握C语言，请跳过。  为了理解boot&#x2F;main.c文件，需要了解ELF二进制文件。 当你编译C语言和链接一个C语言程序的时候，编译器将源文件”.c”文件输出到目标文件到”.o”文件，目标文件包括硬件期望的二机制格式的汇编语">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210411193737.png">
+<meta property="og:image" content="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210411202014.png">
+<meta property="og:image" content="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210411203958.png">
+<meta property="og:image" content="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210411204020.png">
+<meta property="og:image" content="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210411223619.png">
+<meta property="og:image" content="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210411224354.png">
+<meta property="og:image" content="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210411225405.png">
+<meta property="og:image" content="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210412152824.png">
+<meta property="og:image" content="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210412155927.png">
+<meta property="og:image" content="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210412161126.png">
+<meta property="og:image" content="c:/Users/xiong/AppData/Roaming/Typora/typora-user-images/image-20210412212551911.png">
+<meta property="og:image" content="c:/Users/xiong/AppData/Roaming/Typora/typora-user-images/image-20210412220154178.png?lastModify=1618290221">
+<meta property="og:image" content="c:/Users/xiong/AppData/Roaming/Typora/typora-user-images/image-20210413130534537.png">
+<meta property="og:image" content="c:/Users/xiong/AppData/Roaming/Typora/typora-user-images/image-20210413144308324.png">
+<meta property="og:image" content="c:/Users/xiong/AppData/Roaming/Typora/typora-user-images/image-20210413151731970.png">
+<meta property="og:image" content="c:/Users/xiong/AppData/Roaming/Typora/typora-user-images/image-20210413155626945.png">
+<meta property="article:published_time" content="2021-04-11T06:06:41.006Z">
+<meta property="article:modified_time" content="2021-04-13T08:43:09.413Z">
+<meta property="article:author" content="玉杰君">
+<meta property="article:tag" content="os">
+<meta property="article:tag" content="6.828">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210411193737.png">
+
+<link rel="canonical" href="https://xiongyujie.github.io/2021/04/11/MIT6.828/03_lab1_2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>01_环境配置 | xiongyujie's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">xiongyujie's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-photo">
+
+    <a href="/photo/" rel="section"><i class="fas fa-camera-retro fa-fw"></i>相册</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiongyujie.github.io/2021/04/11/MIT6.828/03_lab1_2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jfif">
+      <meta itemprop="name" content="玉杰君">
+      <meta itemprop="description" content="坚持！坚持！坚持！！！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xiongyujie's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          01_环境配置
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-04-11 14:06:41" itemprop="dateCreated datePublished" datetime="2021-04-11T14:06:41+08:00">2021-04-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-13 16:43:09" itemprop="dateModified" datetime="2021-04-13T16:43:09+08:00">2021-04-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MIT-OS-6-828/" itemprop="url" rel="index"><span itemprop="name">MIT OS 6.828</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2021/04/11/MIT6.828/03_lab1_2/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2021/04/11/MIT6.828/03_lab1_2/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="加载内核"><a href="#加载内核" class="headerlink" title="加载内核"></a>加载内核</h4><p>exercise 4. 阅读有关C语言指针编程 *The C Programming Language</p>
+<p>如果没有C语言基础的话，请不要跳过学习C语言指针问题。如果熟练掌握C语言，请跳过。 </p>
+<p>为了理解<code>boot/main.c</code>文件，需要了解<code>ELF</code>二进制文件。</p>
+<p>当你编译C语言和链接一个C语言程序的时候，编译器将源文件”.c”文件输出到目标文件到”.o”文件，目标文件包括硬件期望的二机制格式的汇编语言指令。</p>
+<p>连接器将所有已编译的目标文件组合到单个二进制映像中，例如<code>ELF</code>格式，代表可执行和可连接的。</p>
+<p><code>elf</code>格式可以参考：<a target="_blank" rel="noopener" href="https://pdos.csail.mit.edu/6.828/2018/readings/elf.pdf%E3%80%82%E6%AD%A4%E6%A0%BC%E5%BC%8F%E4%B8%8D%E9%9C%80%E8%A6%81%E8%BF%87%E6%B7%B1%E7%9A%84%E4%BA%86%E8%A7%A3%E3%80%82">https://pdos.csail.mit.edu/6.828/2018/readings/elf.pdf。此格式不需要过深的了解。</a></p>
+<p>对于6.828来说，将<code>ELF</code>可执行文件具有几个加载信息的头文件，然后是几个程序段，这几个程序段都是要指定加载到内存中的连续代码或者数据块。</p>
+<p><code>ELF</code>二进制文件以固定长度的<code>ELF</code>头开始，后面跟着可变长度的程序头，程序头列出每一个要加载的程序段。`</p>
+<p><code>C</code>语言再<code>inc/elf.h</code>定义了这些<code>ELF</code>头</p>
+<p>在该程序中，我们感兴趣的是</p>
+<ol>
+<li><code>.text</code>: 程序执行的指令</li>
+<li><code>.rodata</code>: 只读数据</li>
+<li><code>.data</code>: 程序初始化数据</li>
+</ol>
+<p>当连接器计算程序的内存布局的时候，它同样保留了空间给未初始化的全局变量，<code>C</code>语言要求未初始化的全局变量以0开头。</p>
+<p>检查内核可执行文件中所有部分的名称、大小、和链接完整地址。</p>
+<p><code>objdump -h obj/keen/kernel</code></p>
+<p><img src="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210411193737.png" alt="image-20210411193737403"></p>
+<p>段的加载地址，是该段期望从中执行的内存地址，链接器以多种方式对二进制文件中的链接地址进行编码。</p>
+<h6 id="训练五"><a href="#训练五" class="headerlink" title="训练五"></a>训练五</h6><p>修改<code>make/Makefrag</code>的链接地址，重新追踪引导程序加载过程。最后修改回来。</p>
+<p><img src="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210411202014.png" alt="image-20210411202014683"></p>
+<p>我在该文件将<code>0x7c00</code>改为<code>0x7c11</code>，通过调试发现，在加载引导程序过程中，只能加载到<code>0x7c11</code>不能继续进行。</p>
+<p>除了段信息之外，<code>ELF</code>头文件中嗨哟很多的字段对我们来说很重要，被称为<code>e_entry</code>。这个字段是入口的链接地址，程序在文本开始执行的内存地址。</p>
+<h6 id="训练6"><a href="#训练6" class="headerlink" title="训练6"></a>训练6</h6><p>检查引导加载程序启动和导入内核时候<code>0x00100000</code>的内容。</p>
+<p>使用<code>b *0x00100000</code>设置断点，使用<code>x/10i 0x00100000</code>字节内内容</p>
+<p>未进入内核</p>
+<p><img src="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210411203958.png" alt="image-20210411203958842"></p>
+<p>进入内核</p>
+<p><img src="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210411204020.png" alt="image-20210411204020891"></p>
+<h4 id="第三部分：内核"><a href="#第三部分：内核" class="headerlink" title="第三部分：内核"></a>第三部分：内核</h4><h5 id="使用虚拟来解决位置依赖性"><a href="#使用虚拟来解决位置依赖性" class="headerlink" title="使用虚拟来解决位置依赖性"></a>使用虚拟来解决位置依赖性</h5><p>当你检查加载程序的链接地址和加载地址，他们匹配的十分完美。但是内核链接地址和加载地址存在相当大的差异。</p>
+<p>链接内核更加的复杂，远远超出引导程序加载，所以链接和加载地址位于<code>kern/kern.ld</code>顶部，<u>但是我没有看见这个文件</u></p>
+<p>操作系统内核经常被链接和运行于很高的虚拟地址，例如<code>0x00100000</code>，为了释放低地址的空间给用户编程使用。</p>
+<p>许多机器在<code>0x00100000</code>上没有实际的物理地址，所以我们不指望在其中存储内核。相反，我们将会使用进程空间来管理硬盘，通过映射虚拟地址<code>0x00100000</code>和物理地址<code>0x00100000</code>，使用这种方法，我们就可以留出足够大的用户进程空间了。</p>
+<p>事实上，在下个实验，我们将映射256MB的内存，从<code>0x00000000</code>到<code>0x0fffffff</code>的物理空间到<code>0x00000000</code>到<code>0xffffffff</code>的虚拟空间。</p>
+<p>现在我们开始映射<code>4MB</code>空间的内存，这已经足够让我们启动和运行。我们将在<code>kern/entrypgdir.c</code>手写和静态初始化页目录和页表，我们不需要了解这项工作的详情，只需要了解完成这项工作的含义。</p>
+<p>在<code>kern/entry.S</code>摄入之<code>CRO_PG</code>标志位，<code>CRO_PG</code>一旦设置，内存引用就是虚拟地址，内存硬件就会将虚拟地址转换为物理地址。</p>
+<h6 id="训练7"><a href="#训练7" class="headerlink" title="训练7"></a>训练7</h6><p>使用<code>QEMU</code>和<code>GDB</code>去追踪<code>JOS</code>内核，并停止在<code>movl %eax, %cr0</code>，检查<code>0x00100000</code>和<code>0xf0100000</code>中的内容，执行一步之后，再检查上述地址内容。映射建立后的第一条指令是什么？再<code>kern/entry.S</code>中注释掉<code>movl %eax, %cr0</code>后跟踪。</p>
+<p><img src="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210411223619.png" alt="image-20210411223619165"></p>
+<p>在<code>obj/kern/kernel.asm</code>中可以发现该条指令的地址为<code>0xf01000020</code></p>
+<p><img src="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210411224354.png" alt="image-20210411224353959"></p>
+<p>我们可以发现<code>0x00100000</code>和<code>0xf0100000</code>的内容相同。</p>
+<p><img src="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210411225405.png" alt="image-20210411225405641"></p>
+<p>注释完成之后运行到这一行的代码时候出现错误，但是<code>0x00100000</code>还有内容，而<code>0xf0100000</code>的内容出现错误。</p>
+<h6 id="训练8"><a href="#训练8" class="headerlink" title="训练8"></a>训练8</h6><p>使用<code>%o</code>的形式来打印八进制的内容。找到并且完成这段代码。</p>
+<p>阅读<code>kern/printf,lib/printfmt.c, kern/console.c </code>确保你能够理解他们的关系，在下面的实验你就会清楚的了解到<code>prinftmt.c</code>位于<code>lib</code>文件中。</p>
+<p>需要回答如下问题：</p>
+<ul>
+<li><p>解释<code>printf.c</code>和<code>console.c</code>之间的接口，尤其是<code>console.c</code>函数的输出？这个函数如何使用<code>printf.c</code>？</p>
+</li>
+<li><p>解释下面这段代码<code>console.c</code></p>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>      <span class="keyword">if</span> (crt_pos &gt;= CRT_SIZE) &#123;</span><br><span class="line"><span class="number">2</span>              <span class="keyword">int</span> i;</span><br><span class="line"><span class="number">3</span>              memmove(crt_buf, crt_buf + CRT_COLS, (CRT_SIZE - CRT_COLS) * <span class="keyword">sizeof</span>(<span class="keyword">uint16_t</span>));</span><br><span class="line"><span class="number">4</span>              <span class="keyword">for</span> (i = CRT_SIZE - CRT_COLS; i &lt; CRT_SIZE; i++)</span><br><span class="line"><span class="number">5</span>                      crt_buf[i] = <span class="number">0x0700</span> | <span class="string">&#x27; &#x27;</span>;</span><br><span class="line"><span class="number">6</span>              crt_pos -= CRT_COLS;</span><br><span class="line"><span class="number">7</span>      &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>对于下面问题，可以查阅第二讲的注解，</p>
+<p>追踪下面执行的代码</p>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> x = <span class="number">1</span>, y = <span class="number">3</span>, z = <span class="number">4</span>;</span><br><span class="line">cprintf(<span class="string">&quot;x %d, y %x, z %d\n&quot;</span>, x, y, z);</span><br></pre></td></tr></table></figure>
+
+<p>​    在调用<code>cprintf()</code>的时候，<code>fmt</code>指向什么，<code>ap</code>指向什么</p>
+<p>​    列出<code>cons_putc</code>的参数，列出<code>ap</code>的值对于<code>va_arg</code>调用前后来说，列出<code>vcprintf</code>的参数</p>
+<ul>
+<li>运行下面这段代码，逐步的得到输出的结果。逐步操作得到输出结果</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> i = <span class="number">0x00646c72</span>;</span><br><span class="line">cprintf(<span class="string">&quot;H%x Wo%s&quot;</span>, <span class="number">57616</span>, &amp;i);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在下列代码中，<code>y=</code>之后将打印什么？为什么发生这种情况？</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cprintf(<span class="string">&quot;x=%d y=%d&quot;</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>假设<code>GCC</code>更改了其调用约定，使得其按申明顺序将参数推入堆栈，以便最后一个参数推入最后。如何他修改<code>cprintf</code>或其接口，以便任然可以传递可变数量的参数。</li>
+</ul>
+<p><strong>阅读记录</strong></p>
+<p><img src="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210412152824.png" alt="image-20210412152824834"></p>
+<p><strong>训练7</strong>中的文件存在于<code>kern/init.c</code>中，将<code>%o</code>改为<code>%d</code>即可。</p>
+<p><strong>问题一解答：</strong></p>
+<p><img src="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210412155927.png" alt="image-20210412155927863"></p>
+<p><code>console.c</code>的调用接口主要有<code>cputchar(int c),getchar(void),iscons(int fd)</code></p>
+<p><code>prinf.c</code>的调用接口主要有<code>cprintf(const char *fmt, ...), vcprintf(const char *fmt, va_list)</code></p>
+<p><code>console.c</code>中被<code>printf.c</code>使用的方法<code>cputchar(int c),</code></p>
+<p><strong>问题二解答</strong></p>
+<p><img src="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210412161126.png" alt="image-20210412161126734"></p>
+<p>该行代码在<code>195-202</code>行，分析代码，当<code>crt_pos&gt;= CRT_SIZE</code>执行，在<code>console.h</code>中可以看到<code>CRT_SIZE</code>大小为<code>CRT_ROWS(80)*CRT_COLS(25)=2000</code>，同样可以在当前文件中看到<code>crt_pos</code>为16位非符号数字，在<code>cga_init(void)</code>中初始化。这段代码的主要作用就是读取字符将字符输入到屏幕。</p>
+<p><strong>问题三解答：</strong></p>
+<p><img src="C:\Users\xiong\AppData\Roaming\Typora\typora-user-images\image-20210412212551911.png" alt="image-20210412212551911"></p>
+<p>我在<code>i386_init(void)</code>内执行该代码，可以看到这个<code>cprintf()</code>中的参数不难推测<code>fmt</code>指向双引号的内容，而<code>ap</code>指向参数<code>x,y,z</code></p>
+<p>第一步执行<code>vcprintf()</code>，然后执行<code>vprintfmt()</code>，其次执行<code>con_putc</code>，最后是<code>va_arg</code>，</p>
+<p><strong>问题解答4：</strong></p>
+<p><img src="C:\Users\xiong\AppData\Roaming\Typora\typora-user-images\image-20210412220154178.png?lastModify=1618290221" alt="image-20210412220154178"></p>
+<p>输出为<code>he110, World</code> ，57616的八进制位<code>E110</code>，<code>0x00646c72</code>的二进制为<code>110 0100 0110 1100 0111 0010</code>代表的<code>ASCII</code>值为<code>rld</code>，大端存储不知道在哪里换。</p>
+<p><strong>问题解答5：</strong></p>
+<p><img src="C:\Users\xiong\AppData\Roaming\Typora\typora-user-images\image-20210413130534537.png" alt="image-20210413130534537"></p>
+<p>结果如上，个人见解是从其他内存输出了值。</p>
+<p><strong>问题解答6:</strong></p>
+<p>这个问题有点看不懂，跳过了，看完回来看</p>
+<h5 id="Stack"><a href="#Stack" class="headerlink" title="Stack"></a>Stack</h5><h6 id="训练9"><a href="#训练9" class="headerlink" title="训练9"></a>训练9</h6><p>确定内存在何处初始化堆栈，确定堆栈在内存中的位置。内核如何保留堆栈空间？栈堆指针指向保留区的哪一块地址？</p>
+<p>加载程序引导内核之后，我们就进入了<code>entry.S</code>的相关内容，在这个文件中搜索<code>stack</code>，我们可以发现在<code>69-77</code>行的内容为初始化栈堆空间的。并且将栈顶指针<code>bootstacktop</code>存入寄存器<code>esp</code>的，我们可以在<code>obj/kern/kerne.asm</code>文件中发现该寄存器的值为<code>0xf0110000</code>。</p>
+<p><img src="C:\Users\xiong\AppData\Roaming\Typora\typora-user-images\image-20210413144308324.png" alt="image-20210413144308324"></p>
+<p>​    <img src="C:\Users\xiong\AppData\Roaming\Typora\typora-user-images\image-20210413151731970.png" alt="image-20210413151731970"></p>
+<p>内核为堆栈保留了一块空间，地址为<code>0xf0110000</code>，大小为<code>8*4096</code>·，堆栈指针指向保留区的高地址区。</p>
+<p><img src="C:\Users\xiong\AppData\Roaming\Typora\typora-user-images\image-20210413155626945.png" alt="image-20210413155626945"></p>
+<ol>
+<li><code>x86</code>堆栈指针<code>(esp寄存器)</code>指向堆栈使用的最低区域。栈中压入一个值，则指针向下增长。弹出一个值，指针向上减少。在32位的模式下，栈堆只能保存32位的值，<code>esp</code>总是能被4整除。指令变量能够使用硬指针使用栈指针寄存器。</li>
+<li><code>ebp</code>基本指针寄存器通过软件来于栈堆关联。在进入C语言的函数的时候，该函数的前言代码将会被压入栈，栈的信息通过栈顶指针来保存。在运行函数发的过程中，将<code>esp</code>的内容保存到<code>ebp</code>中。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/os/" rel="tag"># os</a>
+              <a href="/tags/6-828/" rel="tag"># 6.828</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/04/09/linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/02_linux%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/04/11/%E9%9A%8F%E7%AC%94/%E9%93%BE%E6%8E%A5%E5%9C%B0%E5%9D%80%E5%92%8C%E5%8A%A0%E8%BD%BD%E5%9C%B0%E5%9D%80/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E5%86%85%E6%A0%B8"><span class="nav-number">1.</span> <span class="nav-text">加载内核</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E4%BA%94"><span class="nav-number">1.0.1.</span> <span class="nav-text">训练五</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E8%AE%AD%E7%BB%836"><span class="nav-number">1.0.2.</span> <span class="nav-text">训练6</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E9%83%A8%E5%88%86%EF%BC%9A%E5%86%85%E6%A0%B8"><span class="nav-number">2.</span> <span class="nav-text">第三部分：内核</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%99%9A%E6%8B%9F%E6%9D%A5%E8%A7%A3%E5%86%B3%E4%BD%8D%E7%BD%AE%E4%BE%9D%E8%B5%96%E6%80%A7"><span class="nav-number">2.1.</span> <span class="nav-text">使用虚拟来解决位置依赖性</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E8%AE%AD%E7%BB%837"><span class="nav-number">2.1.1.</span> <span class="nav-text">训练7</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E8%AE%AD%E7%BB%838"><span class="nav-number">2.1.2.</span> <span class="nav-text">训练8</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Stack"><span class="nav-number">2.2.</span> <span class="nav-text">Stack</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E8%AE%AD%E7%BB%839"><span class="nav-number">2.2.1.</span> <span class="nav-text">训练9</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="玉杰君"
+      src="/images/avatar.jfif">
+  <p class="site-author-name" itemprop="name">玉杰君</p>
+  <div class="site-description" itemprop="description">坚持！坚持！坚持！！！</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yourname" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yourname" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">你好</span>
+</div>
+  <div class="powered-by">无人驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://xiongyujie.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://xiongyujie.github.io/2021/04/11/MIT6.828/03_lab1_2/";
+    this.page.identifier = "2021/04/11/MIT6.828/03_lab1_2/";
+    this.page.title = "01_环境配置";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://xiongyujie.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

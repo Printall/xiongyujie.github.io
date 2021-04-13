@@ -20,23 +20,25 @@
     var CONFIG = {"hostname":"xiongyujie.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="装好虚拟机可以配置环境了，我这里的用的软件是virtualbox+ubuntu20.4 配置环境： 安装qemu，参考 https:&#x2F;&#x2F;www.qemu.org&#x2F;download&#x2F;#source https:&#x2F;&#x2F;pdos.csail.mit.edu&#x2F;6.828&#x2F;2018&#x2F;tools.html 123456git clone https:&#x2F;&#x2F;gitlab.com&#x2F;qem">
+  <meta name="description" content="学习资料来源于： ​    https:&#x2F;&#x2F;www.runoob.com&#x2F;linux&#x2F;linux-intro.html ​    http:&#x2F;&#x2F;www.ruanyifeng.com&#x2F;blog&#x2F;2013&#x2F;08&#x2F;linux_boot_process.html Linux 的发行版说简单点就是将 Linux 内核与应用软件做一个打包。  启动过程linux启动过程：内核引导、运行init、系统初始化、建">
 <meta property="og:type" content="article">
-<meta property="og:title" content="01_环境配置">
-<meta property="og:url" content="https://xiongyujie.github.io/2021/04/02/MIT6.828/01_%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:title" content="01_linux简介">
+<meta property="og:url" content="https://xiongyujie.github.io/2021/04/07/linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/01_linux%E7%AE%80%E4%BB%8B/index.html">
 <meta property="og:site_name" content="xiongyujie&#39;s blog">
-<meta property="og:description" content="装好虚拟机可以配置环境了，我这里的用的软件是virtualbox+ubuntu20.4 配置环境： 安装qemu，参考 https:&#x2F;&#x2F;www.qemu.org&#x2F;download&#x2F;#source https:&#x2F;&#x2F;pdos.csail.mit.edu&#x2F;6.828&#x2F;2018&#x2F;tools.html 123456git clone https:&#x2F;&#x2F;gitlab.com&#x2F;qem">
+<meta property="og:description" content="学习资料来源于： ​    https:&#x2F;&#x2F;www.runoob.com&#x2F;linux&#x2F;linux-intro.html ​    http:&#x2F;&#x2F;www.ruanyifeng.com&#x2F;blog&#x2F;2013&#x2F;08&#x2F;linux_boot_process.html Linux 的发行版说简单点就是将 Linux 内核与应用软件做一个打包。  启动过程linux启动过程：内核引导、运行init、系统初始化、建">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210409201510.png">
-<meta property="article:published_time" content="2021-04-02T03:19:07.353Z">
-<meta property="article:modified_time" content="2021-04-13T08:42:42.561Z">
+<meta property="og:image" content="https://www.runoob.com/wp-content/uploads/2014/06/1511849829609658.jpg">
+<meta property="og:image" content="c:/Users/xiong/AppData/Roaming/Typora/typora-user-images/image-20210407151759329.png">
+<meta property="og:image" content="https://www.runoob.com/wp-content/uploads/2014/06/d0c50-linux2bfile2bsystem2bhierarchy.jpg">
+<meta property="og:image" content="d:/code/github/blog/source/photo/image-20210408131225722.png">
+<meta property="article:published_time" content="2021-04-07T06:19:42.284Z">
+<meta property="article:modified_time" content="2021-04-09T12:12:50.824Z">
 <meta property="article:author" content="玉杰君">
-<meta property="article:tag" content="os">
-<meta property="article:tag" content="6.828">
+<meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210409201510.png">
+<meta name="twitter:image" content="https://www.runoob.com/wp-content/uploads/2014/06/1511849829609658.jpg">
 
-<link rel="canonical" href="https://xiongyujie.github.io/2021/04/02/MIT6.828/01_%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">
+<link rel="canonical" href="https://xiongyujie.github.io/2021/04/07/linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/01_linux%E7%AE%80%E4%BB%8B/">
 
 
 <script id="page-configurations">
@@ -49,7 +51,7 @@
   };
 </script>
 
-  <title>01_环境配置 | xiongyujie's blog</title>
+  <title>01_linux简介 | xiongyujie's blog</title>
   
 
 
@@ -175,7 +177,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xiongyujie.github.io/2021/04/02/MIT6.828/01_%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">
+    <link itemprop="mainEntityOfPage" href="https://xiongyujie.github.io/2021/04/07/linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/01_linux%E7%AE%80%E4%BB%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jfif">
@@ -188,7 +190,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          01_环境配置
+          01_linux简介
         </h1>
 
         <div class="post-meta">
@@ -198,14 +200,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-04-02 11:19:07" itemprop="dateCreated datePublished" datetime="2021-04-02T11:19:07+08:00">2021-04-02</time>
+              <time title="创建时间：2021-04-07 14:19:42" itemprop="dateCreated datePublished" datetime="2021-04-07T14:19:42+08:00">2021-04-07</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-13 16:42:42" itemprop="dateModified" datetime="2021-04-13T16:42:42+08:00">2021-04-13</time>
+                <time title="修改时间：2021-04-09 20:12:50" itemprop="dateModified" datetime="2021-04-09T20:12:50+08:00">2021-04-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -213,7 +215,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/MIT-OS-6-828/" itemprop="url" rel="index"><span itemprop="name">MIT OS 6.828</span></a>
+                  <a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
                 </span>
             </span>
 
@@ -226,8 +228,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2021/04/02/MIT6.828/01_%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2021/04/02/MIT6.828/01_环境配置/" itemprop="commentCount"></span>
+    <a title="disqus" href="/2021/04/07/linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/01_linux%E7%AE%80%E4%BB%8B/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2021/04/07/linux命令学习/01_linux简介/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -242,30 +244,121 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>装好虚拟机可以配置环境了，我这里的用的软件是<code>virtualbox+ubuntu20.4</code></p>
-<p>配置环境：</p>
-<p>安装<code>qemu</code>，参考</p>
-<p><a target="_blank" rel="noopener" href="https://www.qemu.org/download/#source">https://www.qemu.org/download/#source</a></p>
-<p><a target="_blank" rel="noopener" href="https://pdos.csail.mit.edu/6.828/2018/tools.html">https://pdos.csail.mit.edu/6.828/2018/tools.html</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;gitlab.com&#x2F;qemu-project&#x2F;qemu.git</span><br><span class="line">cd qemu</span><br><span class="line">git submodule init</span><br><span class="line">git submodule update --recursive</span><br><span class="line">.&#x2F;configure</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
-
-<p>下载遇见中遇见的错误，</p>
-<p>发现错误一：</p>
-<p>​    <code>ERROR: GNU make(make) not found</code></p>
-<p>解决方法：</p>
-<p>​    <code>sudo apt install make</code></p>
-<p>错误二：</p>
-<p>​    <code>ERROR: Cannot find Ninja</code></p>
-<p>解决方法：</p>
-<p>​    <code>sudo apt install ninja-build</code></p>
-<p>除此之外，编译qemu还需要下载：libsdl1.2-dev, libtool-bin, libglib2.0-dev, libz-dev, and libpixman-1-dev.</p>
-<p>使用<code>sudo apt install [package]</code>即可</p>
-<p>完成qemu之后</p>
-<p>创建/home/6.828文件夹，进入到文件夹中，打开命令行，输入</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;pdos.csail.mit.edu&#x2F;6.828&#x2F;2018&#x2F;jos.git lab</span><br></pre></td></tr></table></figure>
-
-<p>然后进入lab中，使用<code>make &amp;&amp; make qemu</code>，到此环境配置成功。</p>
-<p><img src="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210409201510.png" alt="image-20210403223935643"></p>
+        <p>学习资料来源于：</p>
+<p>​    <a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-intro.html">https://www.runoob.com/linux/linux-intro.html</a></p>
+<p>​    <a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2013/08/linux_boot_process.html">http://www.ruanyifeng.com/blog/2013/08/linux_boot_process.html</a></p>
+<p>Linux 的发行版说简单点就是将 Linux 内核与应用软件做一个打包。</p>
+<p><img src="https://www.runoob.com/wp-content/uploads/2014/06/1511849829609658.jpg" alt="img"></p>
+<h4 id="启动过程"><a href="#启动过程" class="headerlink" title="启动过程"></a>启动过程</h4><p>linux启动过程：内核引导、运行init、系统初始化、建立终端、用户登录</p>
+<p>init的程序类型：</p>
+<ol>
+<li>​    SysV CentOS5以前，配置文件 ：/etc/inittab</li>
+<li>​    Upstart CenttOS6，配置文件：/etc/initab、/etc/init/*.conf</li>
+<li>​    Systemd Centos 7 配置文件：/usr/lib/systemd/system、/etc/system/system</li>
+</ol>
+<p>内核引导：打开电源开机自检，安装BIOS设置启动，操作系统接管硬件，读取/boot内容</p>
+<p>运行init，读取/etc/inittab</p>
+<p>运行级别：运行级别存于/etc/rc[0123456].d</p>
+<ol>
+<li>运行级别0:系统停机状态，系统默认运行级别不能设为0，否则不能正常启动</li>
+<li>运行级别1:单用户工作状态，root权限，用于系统维护，禁止远程登陆</li>
+<li>运行级别2:多用户状态(没有NFS)</li>
+<li>运行级别3:完全的多用户状态(有NFS)，登陆后进入控制台命令行模式</li>
+<li>运行级别4:系统未使用，保留</li>
+<li>运行级别5:X11控制台，登陆后进入图形GUI模式</li>
+<li>运行级别6:系统正常关闭并重启，默认运行级别不能设为6，否则不能正常启动</li>
+<li><img src="C:\Users\xiong\AppData\Roaming\Typora\typora-user-images\image-20210407151759329.png" alt="image-20210407151759329"></li>
+</ol>
+<p>系统初始化：它主要完成的工作有：激活交换分区，检查磁盘，加载硬件模块以及其它一些需要优先执行任务。不过我在unbuntu20.4没有找到inittab</p>
+<p>建立终端，用户登录、图形模式和文字模式切换。</p>
+<p>linux关机：</p>
+<p>​    sync将数据同步到硬盘</p>
+<p>​    使用shutdown关机，<code>showdown -[option] [param] [message]</code> </p>
+<p>​    option参数：-h，几分钟后关机，-r，几分钟后重启</p>
+<p>​    reboot 重启命令， </p>
+<p>​    halt关闭系统等于poweroff</p>
+<h4 id="linux的目录结构："><a href="#linux的目录结构：" class="headerlink" title="linux的目录结构："></a>linux的目录结构：</h4><p>​    <img src="https://www.runoob.com/wp-content/uploads/2014/06/d0c50-linux2bfile2bsystem2bhierarchy.jpg" alt="img"></p>
+<p><img src="D:\code\github\blog\source\photo\image-20210408131225722.png" alt="image-20210408131225722"></p>
+<table>
+<thead>
+<tr>
+<th align="center">文件夹</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">/bin</td>
+<td>存放经常使用的命令</td>
+</tr>
+<tr>
+<td align="center">/boot</td>
+<td>存放启动linux使用的核心文件</td>
+</tr>
+<tr>
+<td align="center">/dev</td>
+<td>存放linux访问的设备和文件系统</td>
+</tr>
+<tr>
+<td align="center">/etc</td>
+<td>存放所有系统管理需要的配置文件</td>
+</tr>
+<tr>
+<td align="center">/home</td>
+<td>用户的工作空间</td>
+</tr>
+<tr>
+<td align="center">/lib*</td>
+<td>系统最基本的动态链接共享库</td>
+</tr>
+<tr>
+<td align="center">/media</td>
+<td>系统把识别的驱动光盘挂在下下面</td>
+</tr>
+<tr>
+<td align="center">/mnt</td>
+<td>用户临时挂载的光盘的目录</td>
+</tr>
+<tr>
+<td align="center">/opt</td>
+<td>主机额外安装软件摆放的目录</td>
+</tr>
+<tr>
+<td align="center">/proc</td>
+<td>虚拟目录，系统内存的映射文件，这个目录的内容存放在内存中。</td>
+</tr>
+<tr>
+<td align="center">/root</td>
+<td>系统管理员的主目录</td>
+</tr>
+<tr>
+<td align="center">/sbin</td>
+<td>存放系统管理员使用的系统管理程序</td>
+</tr>
+<tr>
+<td align="center">/srv</td>
+<td>存放服务器启动之后需要提取的文件</td>
+</tr>
+<tr>
+<td align="center">/sys</td>
+<td>存放系统的设备结构，总线结构，设备块，文件系统。</td>
+</tr>
+<tr>
+<td align="center">/tmp</td>
+<td>存放临时文件</td>
+</tr>
+<tr>
+<td align="center">/usr</td>
+<td>unix shared resource，存放用户应用程序和文件</td>
+</tr>
+<tr>
+<td align="center">/var</td>
+<td>将经常修改的文件存放这个目录下</td>
+</tr>
+<tr>
+<td align="center">/run</td>
+<td>临时文件系统，存储启动到现在的信息。重启之后就会清除。</td>
+</tr>
+</tbody></table>
 
     </div>
 
@@ -275,8 +368,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/os/" rel="tag"># os</a>
-              <a href="/tags/6-828/" rel="tag"># 6.828</a>
+              <a href="/tags/linux/" rel="tag"># linux</a>
           </div>
 
         
@@ -284,10 +376,13 @@
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2021/04/04/MIT6.828/02_lab1/" rel="next" title="02_lab1">
-      02_lab1 <i class="fa fa-chevron-right"></i>
+    <a href="/2021/04/07/%E9%9A%8F%E7%AC%94/%E5%85%B3%E4%BA%8E%E4%BB%A3%E7%90%86/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/04/09/linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/02_linux%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -354,6 +449,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">启动过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#linux%E7%9A%84%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">linux的目录结构：</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -486,9 +582,9 @@
 </script>
 <script>
   var disqus_config = function() {
-    this.page.url = "https://xiongyujie.github.io/2021/04/02/MIT6.828/01_%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/";
-    this.page.identifier = "2021/04/02/MIT6.828/01_环境配置/";
-    this.page.title = "01_环境配置";
+    this.page.url = "https://xiongyujie.github.io/2021/04/07/linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/01_linux%E7%AE%80%E4%BB%8B/";
+    this.page.identifier = "2021/04/07/linux命令学习/01_linux简介/";
+    this.page.title = "01_linux简介";
     };
   NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
     if (window.DISQUS) {
