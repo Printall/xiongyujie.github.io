@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xiongyujie.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="linux的文件属性在linux中，使用ls -l查看l文件属性，具体情况如下  第一个字母代表的是文件的属性： ​    l：表示链接文件 ​    -：表示为文件 ​    d：表示为目录 ​    b：表示装置文件里面的可供存储的设备接口 ​    c：表示装置文件里面的串行设备 linux文件的权限包括读，写，执行分别用r, w, x表示 有三种模式修改权限分别为：+，-， &#x3D; 文件权限的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux文件系统">
+<meta property="og:url" content="https://xiongyujie.github.io/2021/07/01/linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/02_linux%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="xiongyujie&#39;s blog">
+<meta property="og:description" content="linux的文件属性在linux中，使用ls -l查看l文件属性，具体情况如下  第一个字母代表的是文件的属性： ​    l：表示链接文件 ​    -：表示为文件 ​    d：表示为目录 ​    b：表示装置文件里面的可供存储的设备接口 ​    c：表示装置文件里面的串行设备 linux文件的权限包括读，写，执行分别用r, w, x表示 有三种模式修改权限分别为：+，-， &#x3D; 文件权限的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210409202027.png">
+<meta property="article:published_time" content="2021-06-30T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-07-16T08:42:05.611Z">
+<meta property="article:author" content="玉杰君">
+<meta property="article:tag" content="linux权限">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210409202027.png">
+
+<link rel="canonical" href="https://xiongyujie.github.io/2021/07/01/linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/02_linux%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>linux文件系统 | xiongyujie's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">xiongyujie's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-photo">
+
+    <a href="/photo/" rel="section"><i class="fas fa-camera-retro fa-fw"></i>相册</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiongyujie.github.io/2021/07/01/linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/02_linux%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jfif">
+      <meta itemprop="name" content="玉杰君">
+      <meta itemprop="description" content="坚持！坚持！坚持！！！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xiongyujie's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          linux文件系统
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-07-01 00:00:00" itemprop="dateCreated datePublished" datetime="2021-07-01T00:00:00+08:00">2021-07-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-16 16:42:05" itemprop="dateModified" datetime="2021-07-16T16:42:05+08:00">2021-07-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">文件系统</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2021/07/01/linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/02_linux%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2021/07/01/linux命令学习/02_linux的文件系统/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="linux的文件属性"><a href="#linux的文件属性" class="headerlink" title="linux的文件属性"></a>linux的文件属性</h4><p>在linux中，使用<code>ls -l</code>查看l文件属性，具体情况如下</p>
+<p><img src="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210409202027.png" alt="image-20210409202027261"></p>
+<p>第一个字母代表的是文件的属性：</p>
+<p>​    l：表示链接文件</p>
+<p>​    -：表示为文件</p>
+<p>​    d：表示为目录</p>
+<p>​    b：表示装置文件里面的可供存储的设备接口</p>
+<p>​    c：表示装置文件里面的串行设备</p>
+<p>linux文件的权限包括读，写，执行分别用r, w, x表示</p>
+<p>有三种模式修改权限分别为：+，-， =</p>
+<p>文件权限的十进制表示r,w,x分别为1，2，4</p>
+<p>文件的粒度分别为拥有者，组群，其他分别用u, g, o </p>
+<p>a代表所有粒度</p>
+<h5 id="文件权限管理"><a href="#文件权限管理" class="headerlink" title="文件权限管理"></a>文件权限管理</h5><ul>
+<li>chown：改变文件所属用户和组</li>
+<li>chmod：修改用户权限</li>
+<li>chgrp：更改文件组属性</li>
+</ul>
+<p><code>chomod [option] [mode] file</code></p>
+<p><code>option:</code> </p>
+<p>​    <code>-c : 显示更改的部分信息</code></p>
+<p>​    <code>-f: 忽略错误符号</code></p>
+<p>​    <code>-h: 修复符号链接</code></p>
+<p>​    <code>-v: 显示详细的处理信息</code></p>
+<pre><code> `-R: 递归修改`
+</code></pre>
+<p><code>chgrp [-cfhRv] [所属组群] [文件或者目录]</code></p>
+<p><code>option：</code></p>
+<p>​    <code>-c: 显示更改信息</code></p>
+<p>​    <code>-f: 不显示错误信息</code></p>
+<p>​    <code>-h: 只对链接的文件修改，不修改其他文件</code></p>
+<p>​    <code>-R: 递归处理</code></p>
+<p>​    <code>-v: 显示指令执行过程</code></p>
+<p><code>chown [-cfhvR] user[:group] file</code></p>
+<p>​    <code>-c: 显示更改信息</code></p>
+<p>​    <code>-f: 不显示错误信息</code></p>
+<p>​    <code>-h: 只对链接的文件修改，不修改其他文件</code></p>
+<p>​    <code>-R: 递归处理</code></p>
+<p>​    <code>-v: 显示指令执行过程</code></p>
+<h6 id="文件目录管理"><a href="#文件目录管理" class="headerlink" title="文件目录管理"></a>文件目录管理</h6><p>常用的处理命令：</p>
+<table>
+<thead>
+<tr>
+<th align="center">命令</th>
+<th align="center">功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">ls</td>
+<td align="center">列出目录名和文件名</td>
+</tr>
+<tr>
+<td align="center">cd</td>
+<td align="center">切换目录</td>
+</tr>
+<tr>
+<td align="center">pwd</td>
+<td align="center">显示当前目录</td>
+</tr>
+<tr>
+<td align="center">mkdir</td>
+<td align="center">创建文件或者吗目录</td>
+</tr>
+<tr>
+<td align="center">rmdir</td>
+<td align="center">删除文件或者目录</td>
+</tr>
+<tr>
+<td align="center">cp</td>
+<td align="center">复制文件或者目录</td>
+</tr>
+<tr>
+<td align="center">rm</td>
+<td align="center">移除文件或者目录</td>
+</tr>
+<tr>
+<td align="center">mv</td>
+<td align="center">移除或者移动文件或者目录</td>
+</tr>
+</tbody></table>
+<p>常用命令：</p>
+<p><code>ls [option] [目录]</code></p>
+<ul>
+<li> <code>-a: 列出所有文件，包括隐藏文件</code></li>
+<li><code>-d: 列出目录本身，而不是内部数据</code></li>
+<li><code>-l: 列出文件或目录的属性</code></li>
+</ul>
+<p><code>mkdir [option] 目录名称</code></p>
+<ul>
+<li><code>-m: 配置文目录的权限</code></li>
+<li><code>-p: 递归创建</code></li>
+</ul>
+<p>cp: [option] source destination</p>
+<p>-a: 等于-pdr</p>
+<p>-d: 复制链接属性</p>
+<p>-f: 强制复制</p>
+<p>-i: 覆盖询问</p>
+<p>-l: 硬链接复制</p>
+<p>-p: 复制文件的属性</p>
+<p>-r: 递归复制</p>
+<p>-s: 复制为软连接</p>
+<p>-u: 根据源文件和目标文件的版本复制</p>
+<h5 id="linux文件内容查看"><a href="#linux文件内容查看" class="headerlink" title="linux文件内容查看"></a>linux文件内容查看</h5><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cat</td>
+<td>由第一行开始显示文件内容</td>
+</tr>
+<tr>
+<td>tac</td>
+<td>由最后一行显示内容</td>
+</tr>
+<tr>
+<td>nl</td>
+<td>显示行号</td>
+</tr>
+<tr>
+<td>more</td>
+<td>分页显示内容</td>
+</tr>
+<tr>
+<td>less</td>
+<td>和more相同，但是可以向前翻页</td>
+</tr>
+<tr>
+<td>head</td>
+<td>只看前几行</td>
+</tr>
+<tr>
+<td>tail</td>
+<td>只看后几行</td>
+</tr>
+</tbody></table>
+<p><code>cat [option] file</code> </p>
+<ul>
+<li><code>-A：=-vET</code></li>
+<li><code>-b: 列出行号</code></li>
+<li><code>-E: 将结尾断行字节显示</code></li>
+<li><code>-n：列出行号，包括空白</code></li>
+<li><code>-T: 显示table键，并以^|显示</code></li>
+<li><code>-v: 列出特殊字符</code></li>
+</ul>
+<p><code>nl [option] file</code></p>
+<ul>
+<li><code>-b：指定行号的输出方式; a包括空行输出;b表示不输出空行行号</code></li>
+<li><code>-n：行号的输出位置；ln左边输出行号，rn右边述出行号，rz填充0右边显示</code></li>
+<li><code>-w：行号栏占位的位数</code></li>
+</ul>
+<p><code>more file</code></p>
+<ul>
+<li><code>空格键：向下翻页</code></li>
+<li><code>enter：向下翻一行</code></li>
+<li><code>/ ：向下搜索</code></li>
+<li><code>:f：显示文档行号，以及当前行号</code></li>
+<li><code>q：退出文档</code></li>
+<li><code>b：往回翻页</code></li>
+</ul>
+<p><code>less file</code></p>
+<ul>
+<li><code>空白键：向下翻页</code></li>
+<li><code>pagedown：向下翻页</code></li>
+<li><code>pageup：向上翻页</code></li>
+<li><code>/：向下搜索</code></li>
+<li><code>?：向上搜索</code></li>
+<li><code>n：重复前一个搜索</code></li>
+<li><code>N：反向(向上或者向下)重复前一个</code></li>
+<li><code>q： 退出文档</code></li>
+</ul>
+<p>head/tail - n ：表示前n行或者后n行显示</p>
+<h4 id="linux账号管理"><a href="#linux账号管理" class="headerlink" title="linux账号管理"></a>linux账号管理</h4>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/linux%E6%9D%83%E9%99%90/" rel="tag"># linux权限</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/07/01/%E7%AE%97%E6%B3%95/%E5%B9%B6%E6%9F%A5%E9%9B%86/" rel="prev" title="并查集">
+      <i class="fa fa-chevron-left"></i> 并查集
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/07/01/%E7%AE%97%E6%B3%95/%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/" rel="next" title="广度优先搜索">
+      广度优先搜索 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#linux%E7%9A%84%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7"><span class="nav-number">1.</span> <span class="nav-text">linux的文件属性</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86"><span class="nav-number">1.1.</span> <span class="nav-text">文件权限管理</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86"><span class="nav-number">1.1.1.</span> <span class="nav-text">文件目录管理</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#linux%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E6%9F%A5%E7%9C%8B"><span class="nav-number">1.2.</span> <span class="nav-text">linux文件内容查看</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#linux%E8%B4%A6%E5%8F%B7%E7%AE%A1%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">linux账号管理</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="玉杰君"
+      src="/images/avatar.jfif">
+  <p class="site-author-name" itemprop="name">玉杰君</p>
+  <div class="site-description" itemprop="description">坚持！坚持！坚持！！！</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yourname" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yourname" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">你好</span>
+</div>
+  <div class="powered-by">无人驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://xiongyujie.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://xiongyujie.github.io/2021/07/01/linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/02_linux%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/";
+    this.page.identifier = "2021/07/01/linux命令学习/02_linux的文件系统/";
+    this.page.title = "linux文件系统";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://xiongyujie.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

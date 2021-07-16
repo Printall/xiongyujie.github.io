@@ -20,17 +20,26 @@
     var CONFIG = {"hostname":"xiongyujie.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="坚持！坚持！坚持！！！">
+  <meta name="description" content="x86堆栈指针(esp寄存器)指向堆栈使用的最低区域。栈中压入一个值，则指针向下增长。弹出一个值，指针向上减少。在32位的模式下，栈堆只能保存32位的值，esp总是能被4整除。指令变量能够使用硬指针使用栈指针寄存器。 ebp基本指针寄存器通过软件来于栈堆关联。在进入C语言的函数的时候，该函数的前言代码将会被压入栈，栈的信息通过栈顶指针来保存。在运行函数发的过程中，将esp的内容保存到ebp中。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="xiongyujie&#39;s blog">
+<meta property="og:title" content="03_lab1_3">
 <meta property="og:url" content="https://xiongyujie.github.io/2021/04/13/MIT6.828/04_lab1_3/index.html">
 <meta property="og:site_name" content="xiongyujie&#39;s blog">
-<meta property="og:description" content="坚持！坚持！坚持！！！">
+<meta property="og:description" content="x86堆栈指针(esp寄存器)指向堆栈使用的最低区域。栈中压入一个值，则指针向下增长。弹出一个值，指针向上减少。在32位的模式下，栈堆只能保存32位的值，esp总是能被4整除。指令变量能够使用硬指针使用栈指针寄存器。 ebp基本指针寄存器通过软件来于栈堆关联。在进入C语言的函数的时候，该函数的前言代码将会被压入栈，栈的信息通过栈顶指针来保存。在运行函数发的过程中，将esp的内容保存到ebp中。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210415154811.png">
+<meta property="og:image" content="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210415155243.png">
+<meta property="og:image" content="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210415162440.png">
+<meta property="og:image" content="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210417224305.png">
+<meta property="og:image" content="c:/Users/xiong/AppData/Roaming/Typora/typora-user-images/image-20210417221535815.png">
+<meta property="og:image" content="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210417221732.png">
 <meta property="article:published_time" content="2021-04-13T08:35:44.765Z">
-<meta property="article:modified_time" content="2021-04-13T08:35:44.765Z">
+<meta property="article:modified_time" content="2021-05-09T04:52:30.112Z">
 <meta property="article:author" content="玉杰君">
+<meta property="article:tag" content="os">
+<meta property="article:tag" content="6.828">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210415154811.png">
 
 <link rel="canonical" href="https://xiongyujie.github.io/2021/04/13/MIT6.828/04_lab1_3/">
 
@@ -45,7 +54,7 @@
   };
 </script>
 
-  <title> | xiongyujie's blog</title>
+  <title>03_lab1_3 | xiongyujie's blog</title>
   
 
 
@@ -184,7 +193,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
+          03_lab1_3
         </h1>
 
         <div class="post-meta">
@@ -195,6 +204,22 @@
               <span class="post-meta-item-text">发表于</span>
 
               <time title="创建时间：2021-04-13 16:35:44" itemprop="dateCreated datePublished" datetime="2021-04-13T16:35:44+08:00">2021-04-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-09 12:52:30" itemprop="dateModified" datetime="2021-05-09T12:52:30+08:00">2021-05-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MIT-OS-6-828/" itemprop="url" rel="index"><span itemprop="name">MIT OS 6.828</span></a>
+                </span>
             </span>
 
           
@@ -222,7 +247,48 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <ol>
+<li><code>x86</code>堆栈指针<code>(esp寄存器)</code>指向堆栈使用的最低区域。栈中压入一个值，则指针向下增长。弹出一个值，指针向上减少。在32位的模式下，栈堆只能保存32位的值，<code>esp</code>总是能被4整除。指令变量能够使用硬指针使用栈指针寄存器。</li>
+<li><code>ebp</code>基本指针寄存器通过软件来于栈堆关联。在进入C语言的函数的时候，该函数的前言代码将会被压入栈，栈的信息通过栈顶指针来保存。在运行函数发的过程中，将<code>esp</code>的内容保存到<code>ebp</code>中。</li>
+</ol>
+<h5 id="训练10"><a href="#训练10" class="headerlink" title="训练10"></a>训练10</h5><p>开始熟悉<code>x86 C</code>语言调用函数，再<code>obj/kern/kernel.asm</code>找到<code>test_backtrace</code>函数，并且再这设置一个断点。当内核每次回调的时候，检测一下发生了什么。每个<code>test_backtrace</code>嵌套调用时，将多少个字压入堆栈。</p>
+<p>每次回调都会运行这样一段代码。每次调用之后，<code>esp</code>自动增长<code>0x10=16</code>则压入栈堆的内容为16个字</p>
+<p><img src="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210415154811.png" alt="image-20210415154811584"></p>
+<p><img src="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210415155243.png" alt="image-20210415155243823"></p>
+<p>下面将会使用<code>mon_backtrace</code>，这个方法写入到了<code>kern/moniter.c</code>文件中，找到<code>inc/x86.h下面的read_ebp()</code>。使用这回溯功能打印内存信息。</p>
+<p>每一行包括<code>ebp, eip, args</code>，<code>ebp</code>的值指示该函数使用堆栈的基本指针。刚输入函数并且在函数序言代码中设立基本指针，堆栈指针的位置。</p>
+<p><code>eip</code>的值返回指令指针：函数返回时将控件返回的地址。返回指令指针通常指向调用指令之后的指令。</p>
+<p><code>args</code>之后的几个五个十六进制的数字为函数的前五个参数，这些参数以及被压入堆栈。如果使用少于五个参数调用该函数，则并非所有五个值都有用，如何解决该限制。</p>
+<p>第一行打印反应了当前执行的函数，第二行反应了函数的回调，第三行反应了调用该函数的功能。我们应该打印所有未完成的堆栈帧。</p>
+<p><img src="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210415162440.png" alt="image-20210415162440912"></p>
+<p>这有一些特殊的指针，这些点对于下面的实验和练习有必要学习。</p>
+<ol>
+<li><code>int *p = (int*)100 =&gt; (int)p+1, (int)(p+1)</code>前者为数相加为101，后者为指针相加为104</li>
+<li><code>p[i] = *(p+i)</code></li>
+<li><code>&amp;p[i] = (p+i)</code></li>
+</ol>
+<p>尽管C语言都不需要在指针和整数之间进行强制切换，但是操作系统经常会这样做，每当你看见设计到内存地址的加法时，请确定是指针加法还是整数加法。</p>
+<h5 id="训练11："><a href="#训练11：" class="headerlink" title="训练11："></a>训练11：</h5><p>如上述所述实现回溯功能，使用与示例相同的格式，当你认为它正确时，运行<code>make grade</code>查看成绩脚本中的成绩，如果不正确请修正它。提交<code>lab1</code>代码后可以随意提交。</p>
+<p>如果使用<code>read_ebp()</code>，GCC可能会生成优化的代码，该代码可能在<code>mon_backtrace()</code>的函数序言之前调用<code>read_ebp()</code>，这会导致堆栈跟踪不准确。</p>
+<p>这个看了半天没看懂，参考了一下别人的：<a target="_blank" rel="noopener" href="https://123xzy.github.io/2019/03/14/MIT-6-828-Lab-Booting-a-PC/">https://123xzy.github.io/2019/03/14/MIT-6-828-Lab-Booting-a-PC/</a></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">mon_backtrace</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv, struct Trapframe *tf)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="comment">// Your code here.</span></span><br><span class="line">        <span class="keyword">int</span> j;</span><br><span class="line">        <span class="keyword">uint32_t</span> ebp = read_ebp();</span><br><span class="line">        <span class="keyword">uint32_t</span> eip = *((<span class="keyword">uint32_t</span> *)ebp+<span class="number">1</span>);</span><br><span class="line">        cprintf(<span class="string">&quot;Stack backtrace:\n&quot;</span>);</span><br><span class="line">        <span class="keyword">while</span> ((<span class="keyword">int</span>)ebp != <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">                cprintf(<span class="string">&quot;  ebp 0x%08x eip 0x%08x args&quot;</span>, ebp, eip);</span><br><span class="line">                <span class="keyword">uint32_t</span> *args = (<span class="keyword">uint32_t</span> *)ebp + <span class="number">2</span>;</span><br><span class="line">                <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; <span class="number">5</span>; j ++) &#123;</span><br><span class="line">                        cprintf(<span class="string">&quot; %08x&quot;</span>, args[j]);</span><br><span class="line">                &#125;</span><br><span class="line">                cprintf(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">                eip = ((<span class="keyword">uint32_t</span> *)ebp)[<span class="number">1</span>];</span><br><span class="line">                ebp = ((<span class="keyword">uint32_t</span> *)ebp)[<span class="number">0</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="训练12"><a href="#训练12" class="headerlink" title="训练12"></a>训练12</h5><p>修改你的栈堆函数信息，用来显示每个<code>eip</code>的函数名称，源文件名，以及与该eip对应的行号。</p>
+<ol>
+<li>查看文件<code>kern/kernel.ld</code>的<code>__STAB_*</code></li>
+<li>运行<code>objdump -h obj/kern.kernel</code></li>
+<li>运行<code>objdump -G obj/kern/kernel</code></li>
+<li>运行<code>gcc -pipe -nostdinc -O2 -fno-builtin -I. -MD -Wall -Wno-format -DJOS_KERNEL -gstabs -c -S kern/init.c</code></li>
+<li>查看引导加载程序是否将符号表加载到内存，作为加载内核二进制文件的一部分</li>
+</ol>
+<p><img src="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210417224305.png" alt="image-20210417224305077"></p>
+<p><img src="C:\Users\xiong\AppData\Roaming\Typora\typora-user-images\image-20210417221535815.png" alt="image-20210417221535815"></p>
+<p><img src="https://image-1300045024.cos.ap-nanjing.myqcloud.com/img/20210417221732.png" alt="image-20210417221732695"></p>
+<p>从图中可以看出符号表已经加载到了内存。</p>
+<p>答应信息代码如下；</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span>	<span class="title">mon_backtrace</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv, struct Trapframe *tf)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">// Your code here.</span></span><br><span class="line">	<span class="keyword">int</span> i ;</span><br><span class="line">	<span class="keyword">int</span> j ;</span><br><span class="line">	<span class="keyword">int</span> k = <span class="number">0</span> ;</span><br><span class="line">	<span class="keyword">uint32_t</span> ebp = read_ebp();</span><br><span class="line">	<span class="keyword">uint32_t</span> eip = *((<span class="keyword">uint32_t</span> *)ebp  + <span class="number">1</span>);</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">Eipdebuginfo</span> <span class="title">info</span>;</span></span><br><span class="line">	cprintf(<span class="string">&quot;Stack backtrace:\n&quot;</span>);</span><br><span class="line">	<span class="keyword">while</span>((<span class="keyword">int</span>)ebp != <span class="number">0x0</span> )&#123;</span><br><span class="line">        cprintf(<span class="string">&quot;  ebp %08x eip %08x args&quot;</span>, ebp, eip);</span><br><span class="line">        <span class="keyword">uint32_t</span> *args = (<span class="keyword">uint32_t</span> *)ebp + <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++)&#123;</span><br><span class="line">            cprintf(<span class="string">&quot; %08x&quot;</span>, args[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        cprintf(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">        debuginfo_eip(eip, &amp;info);</span><br><span class="line">        <span class="keyword">if</span>(k!=<span class="number">0</span>)&#123;</span><br><span class="line">            cprintf(<span class="string">&quot;\t%s:%u: &quot;</span>,info.eip_file, info.eip_line);</span><br><span class="line">            <span class="keyword">for</span>(j = <span class="number">0</span>; info.eip_fn_name[j] != <span class="string">&#x27;:&#x27;</span>; j++)&#123;</span><br><span class="line">                cprintf(<span class="string">&quot;%c&quot;</span>, info.eip_fn_name[j]);</span><br><span class="line">            &#125;</span><br><span class="line">            cprintf(<span class="string">&quot;+%u\n&quot;</span>, info.eip_fn_namelen);</span><br><span class="line">	&#125;</span><br><span class="line">	k++;</span><br><span class="line">	eip = ((<span class="keyword">uint32_t</span> *)ebp)[<span class="number">1</span>];</span><br><span class="line">	ebp = ((<span class="keyword">uint32_t</span> *)ebp)[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -230,6 +296,10 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/os/" rel="tag"># os</a>
+              <a href="/tags/6-828/" rel="tag"># 6.828</a>
+          </div>
 
         
 
@@ -237,10 +307,13 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/04/11/%E9%9A%8F%E7%AC%94/%E9%93%BE%E6%8E%A5%E5%9C%B0%E5%9D%80%E5%92%8C%E5%8A%A0%E8%BD%BD%E5%9C%B0%E5%9D%80/" rel="prev" title="">
-      <i class="fa fa-chevron-left"></i> 
+    <a href="/2021/04/07/linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0/01_linux%E7%AE%80%E4%BB%8B/" rel="prev" title="01_linux简介">
+      <i class="fa fa-chevron-left"></i> 01_linux简介
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2021/04/18/MIT6.828/05_lab2/" rel="next" title="lab2 代码">
+      lab2 代码 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -306,6 +379,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AE%AD%E7%BB%8310"><span class="nav-number">1.</span> <span class="nav-text">训练10</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AE%AD%E7%BB%8311%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">训练11：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AE%AD%E7%BB%8312"><span class="nav-number">3.</span> <span class="nav-text">训练12</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -321,20 +395,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">14</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -440,7 +514,7 @@
   var disqus_config = function() {
     this.page.url = "https://xiongyujie.github.io/2021/04/13/MIT6.828/04_lab1_3/";
     this.page.identifier = "2021/04/13/MIT6.828/04_lab1_3/";
-    this.page.title = "";
+    this.page.title = "03_lab1_3";
     };
   NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
     if (window.DISQUS) {
